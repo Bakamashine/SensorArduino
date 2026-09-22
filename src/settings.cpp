@@ -1,17 +1,19 @@
 #include "settings.h"
 #include "temperature.h"
 #include "page.h"
+#include "constants.h"
 
 void Settings::setUserTemp(int t)
 {
   userTemperature = t;
 }
 
-int Settings::userTemperature = 0;
+int Settings::userTemperature = DEFAULT_USER_TEMP;
 bool Settings::burnerStatus = false;
 bool Settings::settingsStatus = false;
 bool Settings::errorStatus = false;
-int Settings::delta = 10;
+int Settings::hysteresis = DEFAULT_HYSTERESIS;
+int Settings::correctInt = 0;
 
 int Settings::getUserTemp()
 {
@@ -69,12 +71,22 @@ bool Settings::getErrorStatus()
   return errorStatus;
 }
 
-void Settings::setDelta(int v)
+void Settings::setHysteresis(int v)
 {
-  delta = v;
+  hysteresis = v;
 }
 
-int Settings::getDelta()
+int Settings::getHysteresis()
 {
-  return delta;
+  return hysteresis;
+}
+
+int Settings::getCorrectInt()
+{
+  return correctInt;
+}
+
+void Settings::setCorrectInt(int v)
+{
+  correctInt = v;
 }

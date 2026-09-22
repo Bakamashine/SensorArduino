@@ -15,14 +15,14 @@ Temperature::Temperature()
 
 float Temperature::getTemperature()
 {
-  if (voltage <= MIN_V)
-    return MIN_T;
-  if (voltage >= MAX_V)
-    return MAX_T;
-  return (MIN_T + (voltage - MIN_V) * tick_v) + Settings::getDelta();
+  // if (voltage <= MIN_V)
+  //   return MIN_T;
+  // if (voltage >= MAX_V)
+  //   return MAX_T;
+  return (MIN_T + (voltage - MIN_V) * tick_v) + Settings::getCorrectInt();
 }
 
-Temperature *Temperature::setVoltage(float voltage)
+Temperature *Temperature::setVolt(float voltage)
 {
   this->voltage = voltage;
   return this;

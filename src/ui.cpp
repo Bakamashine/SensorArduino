@@ -71,10 +71,10 @@ void UI<T>::main()
 {
   setText(userTempText, sizeof(userTempText), "UT: %d",
           Settings::getUserTemp());
-  setText(deltaText, sizeof(deltaText), "Delta: %d", Settings::getDelta());
+  setText(deltaText, sizeof(deltaText), "Delta: %d", Settings::getHysteresis());
   this->drawStr(TEMP_X, TEMP_Y, tempText);
   this->drawStr(VOLT_X, VOLT_Y, voltText);
-  this->drawStr(DELTA_X, DELTA_Y, deltaText);
+  this->drawStr(HYSTERESIS_X, HYSTERESIS_Y, deltaText);
   this->drawStr(USERTEMP_X, USERTEMP_Y, userTempText);
   snprintf(burnerText, sizeof(burnerText), "Burner: %s", Settings::getBurnerStatus() ? "ON" : "OFF");
   // error overlay, not a replacement screen
@@ -124,7 +124,7 @@ void UI<T>::removeError()
 template <typename T>
 void UI<T>::initDelta()
 {
-  setText(deltaText, sizeof(deltaText), "Delta: %d", Settings::getDelta());
+  setText(deltaText, sizeof(deltaText), "Delta: %d", Settings::getHysteresis());
 }
 
 template <typename T>

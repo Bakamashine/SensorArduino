@@ -22,7 +22,7 @@ private:
 public:
   Temperature();
   float getTemperature();
-  Temperature *setVoltage(float);
+  Temperature *setVolt(float);
 
   static int getMaxT();
   static int getMinT();

@@ -1,6 +1,7 @@
 #include <Arduino.h>
 #include "validate.h"
 #include "constants.h"
+#include "settings.h"
 
 Validate &Validate::setTemperature(float temp)
 {
@@ -17,18 +18,41 @@ unsigned long Validate::mil = 0;
 
 int Validate::executePipelineValidate()
 {
-  int code = 0;
+  int code = Settings::getErrorStatus();
+  if (code > 0)
+    return code;
   // 1 - closing, 2 - break, 3 - burner is broken
-  if (temperature >= MAX_PERMITTED_TEMP - DEFAULT_DELTA)
+  bool errorOverheat = false;
+  bool errorUnderheat = false;
+
+  // overheat temperature
+  if (temperature >= MAX_PERMITTED_TEMP)
   {
+    errorOverheat = true;
+  }
+  else if (temperature <= MAX_PERMITTED_TEMP - DEFAULT_HYSTERESIS)
+  {
+    errorOverheat = false;
+  }
+
+  // low temperature
+  if (temperature <= MIN_PERMITTED_TEMP)
+  {
+    errorUnderheat = true;
+  }
+  else if (temperature >= MIN_PERMITTED_TEMP + DEFAULT_HYSTERESIS)
+  {
+    errorUnderheat = false;
+  }
+
+  if (errorOverheat)
     code = 1;
-    setErrorCodeAndStatus(code);
-  }
-  else if (temperature <= MIN_PERMITTED_TEMP + DEFAULT_DELTA)
-  {
+
+  if (errorUnderheat)
     code = 2;
+
+  if (code > 0)
     setErrorCodeAndStatus(code);
-  }
 
   if (code > 0)
   {

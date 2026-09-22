@@ -3,10 +3,10 @@
 #include "settings.h"
 #include "page.h"
 
-static const char *const names[MENU_ITEMS_COUNT] = {"Change delta", "Change temperature"};
+static const char *const names[MENU_ITEMS_COUNT] = {"Change hysteresis", "Change temperature", "Ch. value for cor. sensor"};
 
 MenuUI::MenuUI(U8G2 *_display)
-    : display(_display), selected(CHANGE_DELTA)
+    : display(_display), selected(CHANGE_HYSTERESIS)
 {
 }
 
@@ -26,9 +26,25 @@ void MenuUI::draw()
 
   if (valueOpen)
   {
-    char buf[64];
-    int value = (selected == CHANGE_DELTA) ? Settings::getDelta() : Settings::getUserTemp();
-    snprintf(buf, sizeof(buf), (selected == CHANGE_DELTA) ? "Delta: %d" : "UserTemperature: %d", value);
+    char buf[32];
+    const char *label;
+    int value;
+    switch (selected)
+    {
+    case CHANGE_HYSTERESIS:
+      label = "Hysteresis:";
+      value = Settings::getHysteresis();
+      break;
+    case CHANGE_CORRECT_INT:
+      label = "CorrectInt:";
+      value = Settings::getCorrectInt();
+      break;
+    default:
+      label = "UserTemp:";
+      value = Settings::getUserTemp();
+      break;
+    }
+    snprintf(buf, sizeof(buf), "%s %d", label, value);
     display->drawStr(TEMP_X, TEMP_Y, buf);
     return;
   }
@@ -59,30 +75,44 @@ bool MenuUI::isValueOpen()
 
 void MenuUI::increaseValue()
 {
-  if (selected == CHANGE_DELTA)
+  switch (selected)
   {
-    int d = Settings::getDelta() + 1;
-    if (d <= MAX_DELTA)
-      Settings::setDelta(d);
+  case CHANGE_HYSTERESIS:
+  {
+    int d = Settings::getHysteresis() + 1;
+    if (d >= MIN_DELTA && d <= MAX_DELTA)
+      Settings::setHysteresis(d);
+    break;
   }
-  else
-  {
+  case CHANGE_TEMPERATURE:
     Settings::upUserTemp();
+    break;
+  case CHANGE_CORRECT_INT:
+    Settings::setCorrectInt(Settings::getCorrectInt() + 1);
+    break;
+  default:
+    break;
   }
 }
 
 void MenuUI::decreaseValue()
 {
-  if (selected == CHANGE_DELTA)
+  switch (selected)
   {
-    // int d = Settings::getDelta() - 1;
-    // if (d >= MIN_DELTA)
-    int d = Settings::getDelta();
-    if (!(d < MIN_DELTA) && d<=MAX_DELTA)
-      Settings::setDelta(d);
+  case CHANGE_HYSTERESIS:
+  {
+    int d = Settings::getHysteresis() - 1;
+    if (d >= MIN_DELTA && d <= MAX_DELTA)
+      Settings::setHysteresis(d);
+    break;
   }
-  else
-  {
+  case CHANGE_TEMPERATURE:
     Settings::downUserTemp();
+    break;
+  case CHANGE_CORRECT_INT:
+    Settings::setCorrectInt(Settings::getCorrectInt() - 1);
+    break;
+  default:
+    break;
   }
 }

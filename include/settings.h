@@ -7,7 +7,8 @@ private:
   static bool burnerStatus;
   static bool settingsStatus;
   static bool errorStatus;
-  static int delta; // burner hysteresis deadband
+  static int hysteresis; // burner hysteresis deadband
+  static int correctInt;
 
 public:
   static void setUserTemp(int);
@@ -20,6 +21,8 @@ public:
   static void downUserTemp();
   static bool getBurnerStatus();
   static void setBurnerStatus(bool);
-  static void setDelta(int);
-  static int getDelta();
+  static void setHysteresis(int);
+  static int getHysteresis();
+  static void setCorrectInt(int);
+  static int getCorrectInt();
 };
