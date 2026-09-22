@@ -8,27 +8,32 @@
 #define MAX_V 4.5F
 #define MAX_T 110
 
-Temperature::Temperature() {
+Temperature::Temperature()
+{
   tick_v = (MAX_T - MIN_T) / (MAX_V - MIN_V);
 }
 
-float Temperature::getTemperature() {
-  if (voltage <= MIN_V) return MIN_T;
-  if (voltage >= MAX_V) return MAX_T;
-  // if Settings::getDelta is negative, then substraction will be performed. -+ = -
+float Temperature::getTemperature()
+{
+  if (voltage <= MIN_V)
+    return MIN_T;
+  if (voltage >= MAX_V)
+    return MAX_T;
   return (MIN_T + (voltage - MIN_V) * tick_v) + Settings::getDelta();
 }
 
-
-Temperature* Temperature::setVoltage(float voltage) {
+Temperature *Temperature::setVoltage(float voltage)
+{
   this->voltage = voltage;
   return this;
 }
 
-int Temperature::getMaxT() {
+int Temperature::getMaxT()
+{
   return MAX_T;
 }
 
-int Temperature::getMinT() {
+int Temperature::getMinT()
+{
   return MIN_T;
 }

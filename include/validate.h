@@ -1,12 +1,14 @@
 #pragma once
 #include "error.h"
 
-class Validate : public Error {
+class Validate : public Error
+{
 private:
   float temperature = 0.0F;
   static unsigned long mil;
+
 public:
-  Validate& setTemperature(float);
+  Validate &setTemperature(float);
   float getTemperature();
   int executePipelineValidate();
 };

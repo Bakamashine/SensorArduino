@@ -1,15 +1,13 @@
 #pragma once
 
-
-
-class Settings {
+class Settings
+{
 private:
   static int userTemperature;
   static bool burnerStatus;
   static bool settingsStatus;
   static bool errorStatus;
-  static int burnerDelta;
-  static int delta;  // for temperature
+  static int delta; // burner hysteresis deadband
 
 public:
   static void setUserTemp(int);
@@ -22,9 +20,6 @@ public:
   static void downUserTemp();
   static bool getBurnerStatus();
   static void setBurnerStatus(bool);
-  static void setBurnerDelta(int);
-  static int getBurnerDelta();
   static void setDelta(int);
   static int getDelta();
-
 };

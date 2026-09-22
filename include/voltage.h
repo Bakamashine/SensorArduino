@@ -1,6 +1,7 @@
 #pragma once
 
-class Voltage {
+class Voltage
+{
 public:
   static float conToVolt(int);
 };

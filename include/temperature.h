@@ -1,6 +1,5 @@
 #pragma once
 
-
 /**
 0 - break
 0.5 V = -10 Т (min)
@@ -14,14 +13,16 @@ Leaner interpolation:
 
 */
 
-class Temperature {
+class Temperature
+{
 private:
   float voltage = 0.0F;
   float tick_v;
+
 public:
   Temperature();
   float getTemperature();
-  Temperature* setVoltage(float);
+  Temperature *setVoltage(float);
 
   static int getMaxT();
   static int getMinT();
