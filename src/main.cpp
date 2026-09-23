@@ -10,7 +10,7 @@
 #include "settings.h"
 #include "constants.h"
 
-#define IF_SETTINGS_RETURN ({  if (!Settings::getSettingsStatus()) return ; })
+#define IF_SETTINGS_OPEN_RETURN ({  if (!Settings::getSettingsStatus()) return ; })
 
 // button events
 void btnPlusOneClick();
@@ -215,7 +215,7 @@ void haltSystem()
 
 void btnPlusLongPress()
 {
-  IF_SETTINGS_RETURN;
+  IF_SETTINGS_OPEN_RETURN;
 #ifdef DEBUG
   Serial.println("longPress btn_plus");
 #endif
@@ -224,7 +224,7 @@ void btnPlusLongPress()
 
 void btnPlusOneClick()
 {
-  IF_SETTINGS_RETURN;
+  IF_SETTINGS_OPEN_RETURN;
   if (menu->isValueOpen())
     menu->increaseValue();
   else
@@ -233,7 +233,7 @@ void btnPlusOneClick()
 
 void btnMinusOneClick()
 {
-  IF_SETTINGS_RETURN;
+  IF_SETTINGS_OPEN_RETURN;
 
   if (menu->isValueOpen())
     menu->decreaseValue();
@@ -243,7 +243,7 @@ void btnMinusOneClick()
 
 void btnMinusLongPress()
 {
-  IF_SETTINGS_RETURN;
+  IF_SETTINGS_OPEN_RETURN;
 #ifdef DEBUG
   Serial.println("longPress btn_minus");
 #endif
