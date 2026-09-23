@@ -10,6 +10,14 @@
 #include "settings.h"
 #include "constants.h"
 
+#define IF_SETTINGS_RETURN ({  if (!Settings::getSettingsStatus()) return ; })
+
+// button events
+void btnPlusOneClick();
+void btnPlusLongPress();
+void btnMinusOneClick();
+void btnMinusLongPress();
+
 /**
 От нуля до 15 - обрыв
 От 15 до 1000 - изм температура
@@ -22,6 +30,7 @@ DebugUI *debug_ui = new DebugUI();
 Voltage *volt = new Voltage();
 Temperature *temp = new Temperature();
 Validate val;
+MenuUI *menu = ui->getMenuUI();
 
 // status
 bool systemHalted = false;
@@ -120,6 +129,7 @@ void loop()
 
 void wireSetup()
 {
+#ifdef DEBUG
   if (CHECK_ADDRESS)
   {
     debug_ui->printTitle("WIRELESS SETUP");
@@ -147,6 +157,7 @@ void wireSetup()
       Serial.println("No devices found");
     }
   }
+#endif
 }
 
 void toggleSetup()
@@ -175,34 +186,10 @@ void buttonSetup()
   btn_plus.setDebounceMs(debounce);
   btn_minus.setDebounceMs(debounce);
 
-  btn_plus.attachClick([]()
-                       {
-                         if (!Settings::getSettingsStatus()) return;
-                         MenuUI *menu = ui->getMenuUI();
-                         if (menu->isValueOpen())
-                           menu->increaseValue();
-                         else
-                           menu->goToUp(); });
-  btn_minus.attachClick([]()
-                        {
-                          if (!Settings::getSettingsStatus()) return;
-                          MenuUI *menu = ui->getMenuUI();
-
-                          if (menu->isValueOpen())
-                            menu->decreaseValue();
-                          else
-                            menu->goToDown(); });
-
-  btn_plus.attachLongPressStart([]()
-                                {
-                                  if (!Settings::getSettingsStatus()) return;
-                                  Serial.println("longPress btn_plus");
-                                  ui->getMenuUI()->openValue(); });
-  btn_minus.attachLongPressStart([]()
-                                 {
-                                   if (!Settings::getSettingsStatus()) return;
-                                   Serial.println("longPress btn_minus");
-                                   ui->getMenuUI()->closeValue(); });
+  btn_plus.attachClick(btnPlusOneClick);
+  btn_plus.attachLongPressStart(btnPlusLongPress);
+  btn_minus.attachClick(btnMinusOneClick);
+  btn_minus.attachLongPressStart(btnMinusLongPress);
 }
 void ledProgramStatus(bool status)
 {
@@ -224,7 +211,41 @@ void haltSystem()
   digitalWrite(BURNER_PIN, LOW);
   Settings::setBurnerStatus(false);
   Settings::setSettingsStatus(false); // show the error overlay instead of the menu
-  // digitalWrite(RED_LED_PIN, HIGH);
-  // digitalWrite(GREEN_LED_PIN, LOW);
-  // while(true) {};
+}
+
+void btnPlusLongPress()
+{
+  IF_SETTINGS_RETURN;
+#ifdef DEBUG
+  Serial.println("longPress btn_plus");
+#endif
+  ui->getMenuUI()->openValue();
+}
+
+void btnPlusOneClick()
+{
+  IF_SETTINGS_RETURN;
+  if (menu->isValueOpen())
+    menu->increaseValue();
+  else
+    menu->goToUp();
+}
+
+void btnMinusOneClick()
+{
+  IF_SETTINGS_RETURN;
+
+  if (menu->isValueOpen())
+    menu->decreaseValue();
+  else
+    menu->goToDown();
+}
+
+void btnMinusLongPress()
+{
+  IF_SETTINGS_RETURN;
+#ifdef DEBUG
+  Serial.println("longPress btn_minus");
+#endif
+  ui->getMenuUI()->closeValue();
 }

@@ -1,12 +1,15 @@
 #include <Arduino.h>
 #include "temperature.h"
 #include "settings.h"
+#include "helper.h"
 
 #define BREAK 0
 #define MIN_V 0.5F
 #define MIN_T -10
 #define MAX_V 4.5F
 #define MAX_T 110
+
+#define ATTEMPTS 5
 
 Temperature::Temperature()
 {
@@ -15,11 +18,16 @@ Temperature::Temperature()
 
 float Temperature::getTemperature()
 {
-  // if (voltage <= MIN_V)
-  //   return MIN_T;
-  // if (voltage >= MAX_V)
-  //   return MAX_T;
-  return (MIN_T + (voltage - MIN_V) * tick_v) + Settings::getCorrectInt();
+
+  float *values = (float *)malloc(sizeof(float) * ATTEMPTS);
+  for (int i = 0; i < ATTEMPTS; i++)
+  {
+    values[i] = (MIN_T + (voltage - MIN_V) * tick_v) + Settings::getCorrectInt();
+  }
+
+  float avarage_value = getAvarageValue(values, ATTEMPTS);
+  free(values);
+  return static_cast<float>(static_cast<int>(avarage_value * 10)) / 10; // 2.44 => 2.4 ; 2.56 => 2.5
 }
 
 Temperature *Temperature::setVolt(float voltage)

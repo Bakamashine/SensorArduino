@@ -9,6 +9,5 @@ private:
 
 public:
   Validate &setTemperature(float);
-  float getTemperature();
   int executePipelineValidate();
 };

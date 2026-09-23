@@ -27,14 +27,6 @@ MenuUI *UI<T>::getMenuUI()
   return menuUI;
 }
 
-// template<typename T>
-// void UI<T>::setText(char* buf, size_t size, const char* fmt, ...) {
-//   va_list args;
-//   va_start(args, fmt);
-//   vsnprintf(buf, size, fmt, args);
-//   va_end(args);
-// }
-
 template <typename T>
 void UI<T>::setFloatText(char *buf, size_t size, const char *label, float v)
 {

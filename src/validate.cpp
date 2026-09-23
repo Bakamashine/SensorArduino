@@ -9,11 +9,6 @@ Validate &Validate::setTemperature(float temp)
   return *this;
 }
 
-float Validate::getTemperature()
-{
-  return temperature;
-}
-
 unsigned long Validate::mil = 0;
 
 int Validate::executePipelineValidate()
