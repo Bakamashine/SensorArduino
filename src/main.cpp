@@ -10,6 +10,22 @@
 #include "settings.h"
 #include "constants.h"
 
+
+/**
+ * Buttons:
+ *  Plus D12
+ *  Minus D11
+ * Resistor A0
+ * Tumbler A3
+ * Burner (led) D4
+ * Green led D3
+ * Red led D2
+ * Oled display:
+ *  SDA - A4
+ *  SCL - A5
+ * 
+ *  and etc..
+ */
 #define IF_SETTINGS_OPEN_RETURN ({  if (!Settings::getSettingsStatus()) return ; })
 
 // button events
