@@ -1,6 +1,7 @@
 #pragma once
-#include <stdint.h>
 #include <U8g2lib.h>
+#include <stdint.h>
+
 #include "menu_ui.h"
 
 #define DEFAULT_SIZE 16
@@ -8,36 +9,25 @@
 // compile-time check: T must be U8G2 or derived from it
 // thanks you, ai
 template <typename D, typename B>
-struct isU8G2Derived
-{
-private:
-  struct No
-  {
-  };
-  struct Yes
-  {
+struct isU8G2Derived {
+ private:
+  struct No {};
+  struct Yes {
     No no[2];
   };
-  static Yes test(B *)
-  {
-    return Yes();
-  }
-  static No test(...)
-  {
-    return No();
-  }
+  static Yes test(B *) { return Yes(); }
+  static No test(...) { return No(); }
 
-public:
+ public:
   static const bool value = sizeof(test(static_cast<D *>(0))) == sizeof(Yes);
 };
 
 template <typename T>
-class UI : public T
-{
+class UI : public T {
   static_assert(isU8G2Derived<T, U8G2>::value,
                 "UI<T>: T must be a U8G2 display class");
 
-private:
+ private:
   float temperature;
   float voltage;
   int errorCode = 0;
@@ -52,12 +42,9 @@ private:
   MenuUI *menuUI;
   void main();
 
-public:
+ public:
   UI();
-  ~UI()
-  {
-    delete menuUI;
-  }
+  ~UI() { delete menuUI; }
   void initUI();
   void setTemperature(float);
   float getTemperature();

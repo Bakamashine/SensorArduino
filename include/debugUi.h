@@ -1,11 +1,10 @@
 #pragma once
 
-class DebugUI
-{
-private:
+class DebugUI {
+ private:
   static char *fmtAlloc(const char *, ...);
 
-public:
+ public:
   static void printTitle(const char *);
   static void printValue(const char *, const char *);
   static void printValue(const char *, long);

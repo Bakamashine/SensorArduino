@@ -13,13 +13,12 @@ Leaner interpolation:
 
 */
 
-class Temperature
-{
-private:
+class Temperature {
+ private:
   float voltage = 0.0F;
   float tick_v;
 
-public:
+ public:
   Temperature();
   float getTemperature();
   Temperature *setVolt(float);

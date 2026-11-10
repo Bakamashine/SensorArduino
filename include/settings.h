@@ -1,16 +1,15 @@
 #pragma once
 
-class Settings
-{
-private:
+class Settings {
+ private:
   static int userTemperature;
   static bool burnerStatus;
   static bool settingsStatus;
   static bool errorStatus;
-  static int hysteresis; // burner hysteresis deadband
+  static int hysteresis;  // burner hysteresis deadband
   static int correctInt;
 
-public:
+ public:
   static void setUserTemp(int);
   static int getUserTemp();
   static void setSettingsStatus(bool);

@@ -2,12 +2,6 @@
 
 int Page::currentPage = MAIN_PAGE;
 
-int Page::getCurrentPage()
-{
-  return currentPage;
-}
+int Page::getCurrentPage() { return currentPage; }
 
-void Page::setCurrentPage(int page)
-{
-  currentPage = page;
-}
+void Page::setCurrentPage(int page) { currentPage = page; }

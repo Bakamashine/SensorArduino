@@ -7,7 +7,7 @@
 #define RESISTOR_PIN A0
 #define GREEN_LED_PIN 3
 #define TOGGLE_PIN A3
-#define BURNER_PIN 4 // (led)
+#define BURNER_PIN 4  // (led)
 // #define BURNER_DELTA 10
 #define DEFAULT_HYSTERESIS 10
 
@@ -25,10 +25,10 @@
 #define MIN_PERMITTED_TEMP -10
 
 /// periods
-#define ERROR_PERIOD 1000 * 5      // 5 sec
-#define SETTINGS_CLICK_PERIOD 1000 // 1 sec
-#define BUTTON_PERIOD 400          // 0.4 sec
-#define DEBUG_PERIOD 500           // ms between debug log lines
+#define ERROR_PERIOD 1000 * 5       // 5 sec
+#define SETTINGS_CLICK_PERIOD 1000  // 1 sec
+#define BUTTON_PERIOD 400           // 0.4 sec
+#define DEBUG_PERIOD 500            // ms between debug log lines
 
 /// UI
 #define FONT u8g2_font_squeezed_b7_tr
@@ -69,4 +69,3 @@
 #define MAX_DELTA 50
 
 #define DEFAULT_USER_TEMP 50
-

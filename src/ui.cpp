@@ -1,18 +1,18 @@
-#include <Arduino.h>
 #include "ui.h"
-#include "voltage.h"
-#include "error.h"
-#include "settings.h"
-#include "page.h"
+
+#include <Arduino.h>
 #include <stdarg.h>
+
 #include "constants.h"
-#include "menu_ui.h"
+#include "error.h"
 #include "helper_ui.h"
+#include "menu_ui.h"
+#include "page.h"
+#include "settings.h"
+#include "voltage.h"
 
 template <typename T>
-UI<T>::UI()
-    : T(U8G2_R0, /* reset=*/U8X8_PIN_NONE)
-{
+UI<T>::UI() : T(U8G2_R0, /* reset=*/U8X8_PIN_NONE) {
   tempText[0] = '\0';
   deltaText[0] = '\0';
   voltText[0] = '\0';
@@ -22,16 +22,13 @@ UI<T>::UI()
 }
 
 template <typename T>
-MenuUI *UI<T>::getMenuUI()
-{
+MenuUI *UI<T>::getMenuUI() {
   return menuUI;
 }
 
 template <typename T>
-void UI<T>::setFloatText(char *buf, size_t size, const char *label, float v)
-{
-  if (v < 0)
-    v = -v;
+void UI<T>::setFloatText(char *buf, size_t size, const char *label, float v) {
+  if (v < 0) v = -v;
   int whole = (int)v;
   int frac = (int)(v * 100) % 100;
 
@@ -39,28 +36,24 @@ void UI<T>::setFloatText(char *buf, size_t size, const char *label, float v)
 }
 
 template <typename T>
-void UI<T>::setTemperature(float temp)
-{
+void UI<T>::setTemperature(float temp) {
   this->temperature = temp;
   this->setFloatText(tempText, sizeof(tempText), "T", temp);
 }
 
 template <typename T>
-float UI<T>::getTemperature()
-{
+float UI<T>::getTemperature() {
   return temperature;
 }
 
 template <typename T>
-void UI<T>::setVolt(float volt)
-{
+void UI<T>::setVolt(float volt) {
   voltage = volt;
   this->setFloatText(voltText, sizeof(voltText), "V", volt);
 }
 
 template <typename T>
-void UI<T>::main()
-{
+void UI<T>::main() {
   setText(userTempText, sizeof(userTempText), "UT: %d",
           Settings::getUserTemp());
   setText(deltaText, sizeof(deltaText), "Delta: %d", Settings::getHysteresis());
@@ -68,66 +61,57 @@ void UI<T>::main()
   this->drawStr(VOLT_X, VOLT_Y, voltText);
   this->drawStr(HYSTERESIS_X, HYSTERESIS_Y, deltaText);
   this->drawStr(USERTEMP_X, USERTEMP_Y, userTempText);
-  snprintf(burnerText, sizeof(burnerText), "Burner: %s", Settings::getBurnerStatus() ? "ON" : "OFF");
+  snprintf(burnerText, sizeof(burnerText), "Burner: %s",
+           Settings::getBurnerStatus() ? "ON" : "OFF");
   // error overlay, not a replacement screen
-  if (Settings::getErrorStatus())
-  {
+  if (Settings::getErrorStatus()) {
     this->drawStr(BURNER_X, BURNER_Y, Error::getErrorMessage(errorCode));
-  }
-  else
-  {
+  } else {
     this->drawStr(BURNER_X, BURNER_Y, burnerText);
   }
 }
 
 template <typename T>
-void UI<T>::draw()
-{
+void UI<T>::draw() {
   this->firstPage();
-  do
-  {
+  do {
     this->setFont(FONT);
-    switch (Page::getCurrentPage())
-    {
-    case MAIN_PAGE:
-      main();
-      break;
-    case SELECT_SETTINGS:
-      menuUI->draw();
-      break;
-    default:
-      break;
+    switch (Page::getCurrentPage()) {
+      case MAIN_PAGE:
+        main();
+        break;
+      case SELECT_SETTINGS:
+        menuUI->draw();
+        break;
+      default:
+        break;
     }
   } while (this->nextPage());
 }
 
 template <typename T>
-void UI<T>::setError(int code)
-{
+void UI<T>::setError(int code) {
   errorCode = code;
 }
 
 template <typename T>
-void UI<T>::removeError()
-{
+void UI<T>::removeError() {
   errorCode = 0;
 }
 
 template <typename T>
-void UI<T>::initDelta()
-{
+void UI<T>::initDelta() {
   setText(deltaText, sizeof(deltaText), "Delta: %d", Settings::getHysteresis());
 }
 
 template <typename T>
-void UI<T>::userTempInit()
-{
-  setText(userTempText, sizeof(userTempText), "UT: %d", Settings::getUserTemp());
+void UI<T>::userTempInit() {
+  setText(userTempText, sizeof(userTempText), "UT: %d",
+          Settings::getUserTemp());
 }
 
 template <typename T>
-void UI<T>::initUI()
-{
+void UI<T>::initUI() {
   setTemperature(0);
   setVolt(0);
   initDelta();

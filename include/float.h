@@ -1,10 +1,9 @@
 #pragma once
 
-class Float
-{
-public:
+class Float {
+ public:
   static char *getFloat(float);
 
-private:
+ private:
   static char *fmtAlloc(const char *fmt, ...);
 };

@@ -1,15 +1,15 @@
-#include <U8g2lib.h>
 #include <Arduino.h>
 #include <OneButton.h>
+#include <U8g2lib.h>
 #include <Wire.h>
-#include "ui.h"
-#include "debugUi.h"
-#include "voltage.h"
-#include "temperature.h"
-#include "validate.h"
-#include "settings.h"
-#include "constants.h"
 
+#include "constants.h"
+#include "debugUi.h"
+#include "settings.h"
+#include "temperature.h"
+#include "ui.h"
+#include "validate.h"
+#include "voltage.h"
 
 /**
  * Buttons:
@@ -23,10 +23,13 @@
  * Oled display:
  *  SDA - A4
  *  SCL - A5
- * 
+ *
  *  and etc..
  */
-#define IF_SETTINGS_OPEN_RETURN ({  if (!Settings::getSettingsStatus()) return ; })
+#define IF_SETTINGS_OPEN_RETURN                 \
+  ({                                            \
+    if (!Settings::getSettingsStatus()) return; \
+  })
 
 // button events
 void btnPlusOneClick();
@@ -63,8 +66,7 @@ void buttonSetup();
 void ledProgramStatus(bool status);
 void haltSystem();
 
-void setup()
-{
+void setup() {
   Serial.begin(BOD);
   Serial.println("Configuring..");
 #ifdef DEBUG
@@ -83,8 +85,7 @@ void setup()
 }
 
 // main loop
-void loop()
-{
+void loop() {
   btn_plus.tick();
   btn_minus.tick();
 #ifdef DEBUG
@@ -102,15 +103,12 @@ void loop()
 #endif
   int code = val.setTemperature(t).executePipelineValidate();
 
-  if (code > 0)
-  {
+  if (code > 0) {
     Settings::setErrorStatus(true);
     ui->setError(code);
     systemHalted = true;
     haltSystem();
-  }
-  else
-  {
+  } else {
     Settings::setErrorStatus(false);
     ui->removeError();
     systemHalted = false;
@@ -120,17 +118,16 @@ void loop()
 
   ui->draw();
 
-  if (!systemHalted)
-  {
-    if (temp->getTemperature() <= Settings::getUserTemp() - Settings::getHysteresis())
-    {
+  if (!systemHalted) {
+    if (temp->getTemperature() <=
+        Settings::getUserTemp() - Settings::getHysteresis()) {
       debug_ui->printValue("Burner", "ON");
       Settings::setBurnerStatus(true);
       digitalWrite(BURNER_PIN, HIGH);
     }
 
-    else if (temp->getTemperature() >= Settings::getUserTemp() + Settings::getHysteresis())
-    {
+    else if (temp->getTemperature() >=
+             Settings::getUserTemp() + Settings::getHysteresis()) {
       debug_ui->printValue("Burner", "OFF");
       Settings::setBurnerStatus(false);
       digitalWrite(BURNER_PIN, LOW);
@@ -143,11 +140,9 @@ void loop()
   }
 }
 
-void wireSetup()
-{
+void wireSetup() {
 #ifdef DEBUG
-  if (CHECK_ADDRESS)
-  {
+  if (CHECK_ADDRESS) {
     debug_ui->printTitle("WIRELESS SETUP");
     Serial.println("Scanning for I2C devices...");
 
@@ -155,47 +150,38 @@ void wireSetup()
     int nDevices = 0;
 
     byte address, error;
-    for (address = 1; address < 127; address++)
-    {
+    for (address = 1; address < 127; address++) {
       Wire.beginTransmission(address);
       error = Wire.endTransmission();
 
-      if (error == 0)
-      {
+      if (error == 0) {
         debug_ui->bytePrintValue("Founded address", address);
         Serial.print('\n');
 
         nDevices++;
       }
     }
-    if (nDevices == 0)
-    {
+    if (nDevices == 0) {
       Serial.println("No devices found");
     }
   }
 #endif
 }
 
-void toggleSetup()
-{
-  pinMode(TOGGLE_PIN, INPUT_PULLUP);
-}
+void toggleSetup() { pinMode(TOGGLE_PIN, INPUT_PULLUP); }
 
-void resistorSetup()
-{
+void resistorSetup() {
   debug_ui->printTitle("Resistor");
   pinMode(RESISTOR_PIN, INPUT);
 }
-void ledSetup()
-{
+void ledSetup() {
   debug_ui->printTitle("LED SETUP");
   pinMode(RED_LED_PIN, OUTPUT);
   pinMode(GREEN_LED_PIN, OUTPUT);
   pinMode(BURNER_PIN, OUTPUT);
 }
 
-void buttonSetup()
-{
+void buttonSetup() {
   const int debounce = 20;
   btn_plus.setup(BUTTON_PIN_PLUS, INPUT_PULLUP, true);
   btn_minus.setup(BUTTON_PIN_MINUS, INPUT_PULLUP, true);
@@ -207,30 +193,25 @@ void buttonSetup()
   btn_minus.attachClick(btnMinusOneClick);
   btn_minus.attachLongPressStart(btnMinusLongPress);
 }
-void ledProgramStatus(bool status)
-{
-  if (status)
-  {
+void ledProgramStatus(bool status) {
+  if (status) {
     digitalWrite(RED_LED_PIN, HIGH);
     digitalWrite(GREEN_LED_PIN, LOW);
     digitalWrite(BURNER_PIN, LOW);
-  }
-  else
-  {
+  } else {
     digitalWrite(RED_LED_PIN, LOW);
     digitalWrite(GREEN_LED_PIN, HIGH);
   }
 }
 
-void haltSystem()
-{
+void haltSystem() {
   digitalWrite(BURNER_PIN, LOW);
   Settings::setBurnerStatus(false);
-  Settings::setSettingsStatus(false); // show the error overlay instead of the menu
+  Settings::setSettingsStatus(
+      false);  // show the error overlay instead of the menu
 }
 
-void btnPlusLongPress()
-{
+void btnPlusLongPress() {
   IF_SETTINGS_OPEN_RETURN;
 #ifdef DEBUG
   Serial.println("longPress btn_plus");
@@ -238,8 +219,7 @@ void btnPlusLongPress()
   ui->getMenuUI()->openValue();
 }
 
-void btnPlusOneClick()
-{
+void btnPlusOneClick() {
   IF_SETTINGS_OPEN_RETURN;
   if (menu->isValueOpen())
     menu->increaseValue();
@@ -247,8 +227,7 @@ void btnPlusOneClick()
     menu->goToUp();
 }
 
-void btnMinusOneClick()
-{
+void btnMinusOneClick() {
   IF_SETTINGS_OPEN_RETURN;
 
   if (menu->isValueOpen())
@@ -257,8 +236,7 @@ void btnMinusOneClick()
     menu->goToDown();
 }
 
-void btnMinusLongPress()
-{
+void btnMinusLongPress() {
   IF_SETTINGS_OPEN_RETURN;
 #ifdef DEBUG
   Serial.println("longPress btn_minus");

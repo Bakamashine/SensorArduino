@@ -1,12 +1,11 @@
 #pragma once
 
-class Error
-{
-private:
+class Error {
+ private:
   bool status = false;
   int code = 0;
 
-public:
+ public:
   Error();
   void setErrorCode(int code);
   int getErrorCode();
